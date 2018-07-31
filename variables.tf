@@ -24,6 +24,11 @@ variable region {
   default     = "us-central1"
 }
 
+variable ip_address {
+  description = "If not specified, create new global address"
+  default     = ""
+}
+
 variable ip_version {
   description = "IP version for the Global address (IPv4 or v6) - Empty defaults to IPV4"
   default     = ""

@@ -19,7 +19,7 @@ resource "google_compute_global_forwarding_rule" "http" {
   count      = "${var.http_forward ? 1 : 0}"
   name       = "${var.name}"
   target     = "${google_compute_target_http_proxy.default.self_link}"
-  ip_address = "${google_compute_global_address.default.address}"
+  ip_address = "${var.ip_address == "" ? google_compute_global_address.default.address : var.ip_address}"
   port_range = "80"
   depends_on = ["google_compute_global_address.default"]
 }
@@ -29,12 +29,13 @@ resource "google_compute_global_forwarding_rule" "https" {
   count      = "${var.ssl ? 1 : 0}"
   name       = "${var.name}-https"
   target     = "${google_compute_target_https_proxy.default.self_link}"
-  ip_address = "${google_compute_global_address.default.address}"
+  ip_address = "${var.ip_address == "" ? google_compute_global_address.default.address : var.ip_address}"
   port_range = "443"
   depends_on = ["google_compute_global_address.default"]
 }
 
 resource "google_compute_global_address" "default" {
+  count      = "${var.ip_address == "" ? 1 : 0}"
   project    = "${var.project}"
   name       = "${var.name}-address"
   ip_version = "${var.ip_version}"
